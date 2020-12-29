@@ -1,21 +1,18 @@
-" vundle 环境设置
+" vim-plug config
+call plug#begin('~/.vim/plugged')
+" Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
+Plug 'altercation/vim-colors-solarized'
+Plug 'Lokaltog/vim-powerline'       " 状态栏主题
+Plug 'derekwyatt/vim-fswitch'       " 接口与实现快速切换
+Plug 'scrooloose/nerdcommenter'     " 快速开关注释插件
+Plug 'scrooloose/nerdtree'          " 工程管理
+Plug 'fholgado/minibufexpl.vim'     " 多文档编辑
+Plug 'Lokaltog/vim-easymotion'      " 快速移动
+" Plug 'suan/vim-instant-markdown'    " markdown 即时预览
+call plug#end()
+
 filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
 filetype plugin on
-" vundle 管理的插件列表必须位于 vundle#begin() 和 vundle#end() 之间
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'Lokaltog/vim-powerline'       " 状态栏主题
-Plugin 'derekwyatt/vim-fswitch'       " 接口与实现快速切换
-Plugin 'scrooloose/nerdcommenter'     " 快速开关注释插件
-Plugin 'scrooloose/nerdtree'          " 工程管理
-Plugin 'fholgado/minibufexpl.vim'     " 多文档编辑
-Plugin 'Lokaltog/vim-easymotion'      " 快速移动
-Plugin 'suan/vim-instant-markdown'    " markdown 即时预览
-Plugin 'ybian/smartim'                " 中英文切换
-" 插件列表结束
-call vundle#end()
 filetype plugin indent on
 
 " 配色方案
@@ -149,3 +146,26 @@ set undofile
 map <leader>ss :mksession! my.vim<cr> :wviminfo! my.viminfo<cr>
 " 恢复快捷键
 map <leader>rs :source my.vim<cr> :rviminfo my.viminfo<cr>
+
+"Mode Settings
+
+let &t_SI.="\e[5 q" "SI = INSERT mode
+let &t_SR.="\e[4 q" "SR = REPLACE mode
+let &t_EI.="\e[1 q" "EI = NORMAL mode (ELSE)
+
+"  Cursor settings:
+
+"  1 -> blinking block
+"  2 -> solid block
+"  3 -> blinking underscore
+"  4 -> solid underscore
+"  5 -> blinking vertical bar
+"  6 -> solid vertical bar
+
+
+
+"let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+"let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+"let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+
+
