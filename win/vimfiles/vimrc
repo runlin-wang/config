@@ -104,7 +104,7 @@ set relativenumber
 " 高亮显示当前行/列
 set cursorline
 "set cursorcolumn
-highlight CursorLine   cterm=reverse ctermbg=black guibg=NONE guifg=NONE
+"highlight CursorLine   cterm=reverse ctermbg=black guibg=NONE guifg=NONE
 "highlight CursorColumn cterm=NONE ctermbg=black ctermfg=red   guibg=NONE guifg=NONE
 " 高亮显示搜索结果
 set hlsearch
