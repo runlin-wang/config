@@ -232,6 +232,10 @@ nnoremap <Leader>j <C-W>j
 " 定义快捷键在结对符之间跳转
 nnoremap <Leader>M %
 
+" split window
+nnoremap <Leader>- :split<CR>
+nnoremap <Leader>\ :vsplit<CR>
+
 " Spelling Check with <Leader>sc
 nnoremap <Leader>sc :set spell!<CR>
 

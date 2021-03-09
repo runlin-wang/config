@@ -1,6 +1,9 @@
 # alias
 alias e='exit'
-alias l='ls -Al'
+alias ls='ls --color=auto'
+alias l='ls -A'
+alias ll='ls -lF'
+alias la='ls -A'
 
 # git 设置
 alias g='git'
@@ -36,3 +39,6 @@ alias glgga='git log --graph --decorate --all'
 alias glgm='git log --graph --max-count=10'
 alias grv='git remote -v'
 
+
+# self config
+alias n=nvim
