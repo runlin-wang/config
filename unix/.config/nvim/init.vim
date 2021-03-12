@@ -14,6 +14,41 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
 endif
 
 " ==================================================
+" Plug
+" ==================================================
+
+" vim-plug config
+call plug#begin('~/.config/nvim/plugged')
+Plug 'romainl/Apprentice'                               " 主题
+Plug 'morhetz/gruvbox'                                  " 主题
+Plug 'vim-airline/vim-airline'                          " 状态栏
+Plug 'vim-airline/vim-airline-themes'                   " 状态栏主题
+Plug 'derekwyatt/vim-fswitch'                           " 接口与实现快速切换
+Plug 'scrooloose/nerdcommenter'                         " 快速开关注释插件
+Plug 'scrooloose/nerdtree',{'on': 'NERDTreeToggle'}     " 工程管理
+Plug 'Xuyuanp/nerdtree-git-plugin'                      " nerdtree-git-plugin
+Plug 'ryanoasis/vim-devicons'                           " 文件图标
+Plug 'hotoo/pangu.vim'                                  " pangu 中文排版规范化
+Plug 'vimwiki/vimwiki'
+Plug 'junegunn/vim-easy-align'                          " 文本对齐
+" Plug 'fholgado/minibufexpl.vim'                         " 多文档编辑
+" Plug 'Lokaltog/vim-easymotion'                          " 快速移动
+
+" markdown 预览
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'plasticboy/vim-markdown',{'for': 'markdown'}      " markdown 高亮
+
+" Golang Plug
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }      " vim-go
+Plug 'ycm-core/YouCompleteMe'                           " 智能补全
+" TODO: replace coc 
+Plug 'SirVer/ultisnips'                                 " 代码片段
+Plug 'honza/vim-snippets'                               " 库
+" TODO: 中英切换
+" TODO: 浏览器打开 html
+call plug#end()
+
+" ==================================================
 " settings
 " ==================================================
 
@@ -84,6 +119,8 @@ set foldmethod=syntax
 
 " 配色方案
 set background=dark
+colorscheme apprentice
+" colorscheme gruvbox
 " colorscheme pablo
 " colorscheme molokai
 
@@ -124,9 +161,14 @@ set viminfo     ='100,n~/.config/nvim/files/info/viminfo
 
 " 离开插入模式
 autocmd InsertLeave,WinEnter * set cursorline
+
 " 进入插入模式
 autocmd InsertEnter,WinLeave * set nocursorline nohlsearch
 
+" 开启文件类型监测
+filetype off
+filetype plugin on
+filetype plugin indent on
 
 " ==================================================
 " map
@@ -182,10 +224,6 @@ vnoremap \s :s//g<Left><Left>
 nnoremap <C-h> :bp<CR>
 nnoremap <C-l> :bn<CR>
 
-" Markdown Settings
-source ~/.config/nvim/md-snippets.vim
-
-
 " ==================================================
 " Leader
 " ==================================================
@@ -194,7 +232,7 @@ source ~/.config/nvim/md-snippets.vim
 let g:mapleader="\<space>"
 
 " Open the vimrc file anytime
-noremap <Leader>rc :e $MYVIMRC<CR>
+nnoremap <Leader>rc :e $MYVIMRC<CR>
 
 " 去除搜索高亮显示
 nnoremap <Leader><CR> :nohlsearch<CR>
@@ -205,8 +243,8 @@ vnoremap <Leader>y "+y
 " 设置快捷键将系统剪贴板内容粘贴至 vim
 nnoremap <Leader>p "+p
 
-" 定义快捷键关闭当前分割窗口
-nnoremap <Leader>q :q<CR>
+" 定义快捷键关闭当前所有窗口
+nnoremap <Leader>q :qa<CR>
 
 " 定义快捷键保存当前窗口内容
 nnoremap <Leader>w :w<CR>
@@ -239,6 +277,10 @@ nnoremap <Leader>M %
 nnoremap <Leader>- :split<CR>
 nnoremap <Leader>\ :vsplit<CR>
 
+" modify resize 
+nnoremap <Leader>vr :vertical resize 
+nnoremap <Leader>rs :resize 
+
 " Spelling Check with <Leader>sc
 nnoremap <Leader>sc :set spell!<CR>
 
@@ -248,13 +290,16 @@ nnoremap <Leader>sw :set wrap<CR>
 " Opening a terminal window
 nnoremap <Leader>/ :set splitbelow<CR>:split<CR>:res +10<CR>:term<CR>I
 
+" ==================================================
+" function
+" ==================================================
+
 func! SpWindow()
     set splitbelow
     :sp
     :res -15
 endfunc
 
-" Compile function
 func! CompileRun()
     exec "w"
     if &filetype == 'c'
@@ -272,10 +317,12 @@ func! CompileRun()
     elseif &filetype == 'python'
         :call SpWindow()
         :term python3 %
+    " elseif &filetype == 'html'
+        " :!open %
     elseif &filetype == 'html'
         silent! exec "!".g:mkdp_browser." % &"
     elseif &filetype == 'markdown'
-        :InstantMarkdownPreview
+        :MarkdownPreview
     elseif &filetype == 'javascript'
         :call SpWindow()
         :term export DEBUG="INFO,ERROR,WARNING"; node --trace-warnings .
@@ -285,6 +332,18 @@ func! CompileRun()
     endif
 endfunc
 
+" <Leader>r 运行
+noremap <Leader>r :call CompileRun()<CR>
+
+" ==================================================
+" snippets
+" ==================================================
+
+" go snippets
+" source ~/.config/nvim/snippets/go.snippets
+
+" Markdown Settings
+source ~/.config/nvim/snippets/md-snippets.vim
 
 " ==================================================
 " Mode Settings
@@ -305,55 +364,18 @@ else
     let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
 endif
 
-
 " ==================================================
-" Plug
-" ==================================================
-
-" vim-plug config
-call plug#begin('~/.vim/plugged')
-Plug 'romainl/Apprentice'                               " 主题
-Plug 'morhetz/gruvbox'                                  " 主题
-Plug 'vim-airline/vim-airline'                          " 状态栏
-Plug 'vim-airline/vim-airline-themes'                   " 状态栏主题
-Plug 'derekwyatt/vim-fswitch'                           " 接口与实现快速切换
-Plug 'scrooloose/nerdcommenter'                         " 快速开关注释插件
-Plug 'scrooloose/nerdtree',{'on': 'NERDTreeToggle'}     " 工程管理
-" Plug 'fholgado/minibufexpl.vim'                         " 多文档编辑
-Plug 'hotoo/pangu.vim'                                  " pangu 中文排版规范化
-Plug 'vimwiki/vimwiki'
-" Plug 'Lokaltog/vim-easymotion'                          " 快速移动
-
-" markdown 预览
-Plug 'suan/vim-instant-markdown',{'for': 'markdown'}
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-Plug 'plasticboy/vim-markdown',{'for': 'markdown'}      " markdown 高亮
-Plug 'junegunn/vim-easy-align'                          " 文本对齐
-
-" Golang Plug
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }      " vim-go
-Plug 'ycm-core/YouCompleteMe'                           " 智能补全
-Plug 'SirVer/ultisnips'                                 " 代码片段
-Plug 'honza/vim-snippets'                               " 库
-" 中英切换
-" 浏览器打开 html
-call plug#end()
-
-
-" Plug setting
-
-filetype off
-filetype plugin on
-filetype plugin indent on
-
-" colorscheme apprentice
-colorscheme gruvbox
-
 " airline
+" ==================================================
+
 let laststatus = 2
 let g:airline_powerline_fonts = 1
 let g:airline_theme = "dark"
 let g:airline#extensions#tabline#enabled = 1
+
+" ==================================================
+" NERDTree
+" ==================================================
 
 " 设置NERDTree子窗口宽度
 let NERDTreeWinSize=32
@@ -370,53 +392,51 @@ let NERDTreeMinimalUI=1
 " 删除文件时自动删除文件对应 buffer
 let NERDTreeAutoDeleteBuffer=1
 
-" 注释加上空格
-let g:NERDSpaceDelims=1
-
-" Plug map
-
-" *.cpp 和 *.h 间切换
-" nnoremap <silent> <Leader>sw :FSHere<cr>
-
 " 使用 NERDTree 插件查看工程文件。
 nnoremap <Leader><Leader> :NERDTreeToggle<CR>
 
-noremap <Leader>r :call CompileRun()<CR>
+" ==================================================
+" vim-fswitch
+" ==================================================
 
-" vim-go config
+" 注释加上空格
+let g:NERDSpaceDelims=1
+
+" ==================================================
+" vim-go
+" ==================================================
+
 " au FileType go nnoremap <Leader>r :GoRun<CR>
 au FileType go nnoremap <Leader>t :GoTest<CR>
 let g:go_fmt_command = "goimports"
 
-" YCM settings
-let g:ycm_key_list_select_completion = ['', '']
-let g:ycm_key_list_previous_completion = ['']
-let g:ycm_key_invoke_completion = '<C-Space>'
-" 防止YCM和Ultisnips的TAB键冲突，禁止YCM的TAB
-" let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-" let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+" ==================================================
+" UltiSnips
+" ==================================================
 
-" UltiSnips setting
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 " 使用 UltiSnipsEdit 命令时垂直分割屏幕
  let g:UltiSnipsEditSplit="vertical"
 
-"" vim-markdown
+" ==================================================
+" vim-markdown
+" ==================================================
+
 " Github风格markdown语法
 let g:vim_markdown_no_extensions_in_markdown = 1
 
-" let g:instant_markdown_slow = 1
-let g:instant_markdown_autostart = 0
+" ==================================================
+" markdown-preview
+" ==================================================
 
-" 打开预览
-" au FileType markdown nnoremap <Leader>r :InstantMarkdownPreview<CR>
+au FileType markdown noremap <Leader>v :MarkdownPreview<CR>
+" autocmd BufWritePre *.markdown,*.md,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
 
-" 指定浏览器路径
-let g:instant_markdown_browser = "chrome.exe"
-
-autocmd BufWritePre *.markdown,*.md,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
+" ==================================================
+" vim-easy-align
+" ==================================================
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
@@ -424,6 +444,9 @@ xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 
-let g:vimwiki_list = [{'path': '~/github.com/blog/wiki/', 'syntax': 'markdown', 'ext': '.md'}]
+" ==================================================
+" vimwiki
+" ==================================================
 
+let g:vimwiki_list = [{'path': '~/github.com/blog/wiki/', 'syntax': 'markdown', 'ext': '.md'}]
 
