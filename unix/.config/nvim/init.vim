@@ -103,7 +103,9 @@ set visualbell
 set autoread
 
 " 如果文件夹不存在，则新建文件夹
-silent !mkdir -p ~/.config/nvim/tmp/{backup, swap, undo}
+if !isdirectory("$HOME/.config/nvim/files/backup/") || !isdirectory("$HOME/.config/nvim/files/undo/") || !isdirectory("$HOME/.config/nvim/files/swap/")
+    silent !mkdir -p ~/.config/nvim/files/{ backup, swap, undo }
+endif
 
 " 备份文件
 set backup
@@ -140,7 +142,7 @@ noremap : ;
 cnoremap <C-n> <down>
 cnoremap <C-p> <up>
 
-nnoremap <CR> a<CR><Esc>k$
+" nnoremap <CR> a<CR><Esc>k$
 nnoremap <C-CR> o<Esc>k
 nnoremap <S-CR> O<Esc>j
 
@@ -174,6 +176,7 @@ noremap tx :r!figlet
 
 " find and replace
 noremap \s :%s//g<Left><Left>
+vnoremap \s :s//g<Left><Left>
 
 " buffer 切换快捷键
 nnoremap <C-h> :bp<CR>
