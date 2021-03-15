@@ -18,34 +18,51 @@ endif
 " ==================================================
 
 " vim-plug config
+
 call plug#begin('~/.config/nvim/plugged')
 Plug 'romainl/Apprentice'                               " 主题
 Plug 'morhetz/gruvbox'                                  " 主题
+Plug 'ajmwagar/vim-deus'                                " colorscheme
 Plug 'vim-airline/vim-airline'                          " 状态栏
 Plug 'vim-airline/vim-airline-themes'                   " 状态栏主题
 Plug 'derekwyatt/vim-fswitch'                           " 接口与实现快速切换
 Plug 'scrooloose/nerdcommenter'                         " 快速开关注释插件
-Plug 'scrooloose/nerdtree',{'on': 'NERDTreeToggle'}     " 工程管理
-Plug 'Xuyuanp/nerdtree-git-plugin'                      " nerdtree-git-plugin
 Plug 'ryanoasis/vim-devicons'                           " 文件图标
 Plug 'hotoo/pangu.vim'                                  " pangu 中文排版规范化
-Plug 'vimwiki/vimwiki'
+Plug 'vimwiki/vimwiki'                                  " vimwiki
 Plug 'junegunn/vim-easy-align'                          " 文本对齐
-" Plug 'fholgado/minibufexpl.vim'                         " 多文档编辑
-" Plug 'Lokaltog/vim-easymotion'                          " 快速移动
+Plug 'ianva/vim-youdao-translater'                      " 有道翻译
+Plug 'preservim/tagbar'                                 " 大纲查看
+Plug 'mhinz/vim-startify'                               " vim 开始屏幕
+Plug 'Lokaltog/vim-easymotion'                          " 快速移动
+
+" nerdtree
+Plug 'scrooloose/nerdtree',{'on': 'NERDTreeToggle'}                     " 工程管理
+Plug 'Xuyuanp/nerdtree-git-plugin',{'on': 'NERDTreeToggle'}             " nerdtree-git-plugin
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight',{'on': 'NERDTreeToggle'} " nerdtree 高亮
+
+" Git 
+Plug 'airblade/vim-gitgutter'                           " 在 vim 里使用 git 命令
+Plug 'tpope/vim-fugitive'                               " vim 里显示文件变动
+Plug 'junegunn/gv.vim'                                  " git commit Brower
 
 " markdown 预览
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'plasticboy/vim-markdown',{'for': 'markdown'}      " markdown 高亮
 
 " Golang Plug
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }      " vim-go
-Plug 'ycm-core/YouCompleteMe'                           " 智能补全
-" TODO: replace coc 
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
+
+" Code
+Plug 'neoclide/coc.nvim', {'branch': 'release'}         " 自动补全
 Plug 'SirVer/ultisnips'                                 " 代码片段
-Plug 'honza/vim-snippets'                               " 库
+Plug 'honza/vim-snippets'                               " 片段库
+Plug 'jiangmiao/auto-pairs'                             " 成对输入
+Plug 'ctrlpvim/ctrlp.vim'                               " 文件模糊搜索
+Plug 'Yggdroot/indentLine'                              " 缩进显示
+
 " TODO: 中英切换
-" TODO: 浏览器打开 html
+
 call plug#end()
 
 " ==================================================
@@ -92,6 +109,9 @@ set hlsearch
 " 禁止折行
 set nowrap
 
+" 禁用鼠标
+set mouse=
+
 " 开启语法高亮功能
 syntax enable
 
@@ -119,10 +139,9 @@ set foldmethod=syntax
 
 " 配色方案
 set background=dark
-colorscheme apprentice
+" colorscheme apprentice
 " colorscheme gruvbox
-" colorscheme pablo
-" colorscheme molokai
+colorscheme deus
 
 " 启动 vim 时关闭折叠代码
 set nofoldenable
@@ -174,6 +193,8 @@ filetype plugin indent on
 " map
 " ==================================================
 
+" nnoremap 
+
 " 定义快捷键到行首和行尾
 nnoremap H 0
 nnoremap L $
@@ -189,15 +210,20 @@ nnoremap <C-CR> o<Esc>k
 nnoremap <S-CR> O<Esc>j
 
 " 括号补全
-inoremap ( ()<Esc>i
-inoremap [ []<Esc>i
-inoremap { {}<Esc>i
+" inoremap ( ()<Esc>i
+" inoremap [ []<Esc>i
+" inoremap { {}<Esc>i
 " inoremap < <><Esc>i
 " inoremap " ""<Esc>i
-inoremap ,, <Esc>la
+" inoremap ,, <Esc>la
 
 " Insert Mode Cursor Movement
-inoremap <C-a> <Esc>I
+inoremap <C-a> <Home>
+inoremap <C-e> <End>
+" inoremap <C-p> <Up>
+" inoremap <C-n> <Down>
+" inoremap <C-b> <Left>
+" inoremap <C-f> <Right>
 
 " Command Mode Cursor Movement
 cnoremap <C-a> <Home>
@@ -234,6 +260,9 @@ let g:mapleader="\<space>"
 " Open the vimrc file anytime
 nnoremap <Leader>rc :e $MYVIMRC<CR>
 
+" source $MYVIMRC
+nnoremap <Leader>R :source $MYVIMRC<CR>
+
 " 去除搜索高亮显示
 nnoremap <Leader><CR> :nohlsearch<CR>
 
@@ -243,8 +272,11 @@ vnoremap <Leader>y "+y
 " 设置快捷键将系统剪贴板内容粘贴至 vim
 nnoremap <Leader>p "+p
 
+" 定义快捷键关闭当前窗口
+nnoremap <Leader>q :q<CR>
+
 " 定义快捷键关闭当前所有窗口
-nnoremap <Leader>q :qa<CR>
+nnoremap <Leader>e :qa<CR>
 
 " 定义快捷键保存当前窗口内容
 nnoremap <Leader>w :w<CR>
@@ -322,7 +354,8 @@ func! CompileRun()
     elseif &filetype == 'html'
         silent! exec "!".g:mkdp_browser." % &"
     elseif &filetype == 'markdown'
-        :MarkdownPreview
+        :!open %
+        " :MarkdownPreview
     elseif &filetype == 'javascript'
         :call SpWindow()
         :term export DEBUG="INFO,ERROR,WARNING"; node --trace-warnings .
@@ -372,6 +405,21 @@ let laststatus = 2
 let g:airline_powerline_fonts = 1
 let g:airline_theme = "dark"
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+
+
+" ==================================================
+" airline-theme deus
+" ==================================================
+
+set t_Co=256
+" set termguicolors
+
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+
+let g:deus_termcolors=256
+let g:airline_theme='deus'
 
 " ==================================================
 " NERDTree
@@ -393,7 +441,11 @@ let NERDTreeMinimalUI=1
 let NERDTreeAutoDeleteBuffer=1
 
 " 使用 NERDTree 插件查看工程文件。
-nnoremap <Leader><Leader> :NERDTreeToggle<CR>
+nnoremap <Leader>n :NERDTreeToggle<CR>
+
+" Exit Vim if NERDTree is the only window left.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
+    \ quit | endif
 
 " ==================================================
 " vim-fswitch
@@ -414,9 +466,9 @@ let g:go_fmt_command = "goimports"
 " UltiSnips
 " ==================================================
 
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
+" let g:UltiSnipsExpandTrigger="<tab>"
+" let g:UltiSnipsJumpForwardTrigger="<tab>"
+" let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 " 使用 UltiSnipsEdit 命令时垂直分割屏幕
  let g:UltiSnipsEditSplit="vertical"
 
@@ -439,14 +491,95 @@ au FileType markdown noremap <Leader>v :MarkdownPreview<CR>
 " ==================================================
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
+xnoremap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+nnoremap ga <Plug>(EasyAlign)
 
 " ==================================================
 " vimwiki
 " ==================================================
 
-let g:vimwiki_list = [{'path': '~/github.com/blog/wiki/', 'syntax': 'markdown', 'ext': '.md'}]
+" 1. blog/diary  -- inbox blog and diary
+" 2. todo        -- todo list
+" 3. study
+" 4. vim
+let g:vimwiki_list = [{'path': '~/github.com/blog/', 
+                     \ 'syntax': 'markdown', 
+                     \ 'ext': '.md'}, 
+                     \{'path': '~/github.com/blog/todo/', 
+                     \ 'syntax': 'markdown', 
+                     \ 'ext': '.md'},
+                     \{'path': '~/github.com/blog/study/', 
+                     \ 'syntax': 'markdown', 
+                     \ 'ext': '.md'},
+                     \{'path': '~/github.com/blog/vim/', 
+                     \ 'syntax': 'markdown', 
+                     \ 'ext': '.md'}]
+
+" 设置开关任务代办快捷键
+au FileType markdown nnoremap <Leader><CR> :VimwikiToggleListItem<CR>
+
+" 关闭在插入表格时的 Tab 键映射
+let g:vimwiki_table_mappings = 0
+
+" 只在根目录使用 vimwiki 格式，其他地方还是使用 vim 的 markdown 处理
+let g:vimwiki_global_ext     = 0
+
+" ==================================================
+" youdao-translater
+" ==================================================
+
+vnoremap <silent> <C-T> :<C-u>Ydv<CR>
+nnoremap <silent> <C-T> :<C-u>Ydc<CR>
+nnoremap <leader>yd :<C-u>Yde<CR>
+
+
+" ==================================================
+" coc.nvim
+" ==================================================
+
+" TODO: https://www.bilibili.com/video/BV1Ka4y1E7AM
+
+" ==================================================
+" vim-gitgutter
+" ==================================================
+
+nnoremap ]h <Plug>(GitGutterNextHunk)
+nnoremap [h <Plug>(GitGutterPrevHunk)
+
+" ==================================================
+" auto-pairs
+" ==================================================
+
+let g:AutoPairsFlyMode = 1
+let g:AutoPairsShortcutBackInsert = '<M-b>'
+
+" ==================================================
+" ctrlp
+" ==================================================
+
+" mapping
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+
+" When invoked without an explicit starting directory, 
+" CtrlP will set its local working directory according to this variable:
+let g:ctrlp_working_path_mode = 'ra'
+
+" ==================================================
+" tagbar
+" ==================================================
+
+" mac
+" let g:tagbar_ctags_bin='/usr/local/Cellar/ctags/5.8_2/bin/ctags' " 设置ctags所在路径
+let g:tagbar_ctags_bin='ctags' " 设置ctags所在路径
+nnoremap <Leader>tb :TagbarToggle<CR>
+let g:tagbar_width=30                                            " 设置tagbar的宽度
+autocmd BufReadPost *.cpp,*.c,*.h,*.java call tagbar#autoopen()  " 在某些情况下自动打开tagbar
+let g:tagbar_left = 1                                            " 让tagbar在页面左侧显示，默认右边
+
+" ==================================================
+" 
+" ==================================================
 
