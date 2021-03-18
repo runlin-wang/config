@@ -63,7 +63,7 @@ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
 
 " Code
 Plug 'neoclide/coc.nvim', {'branch': 'release'}         " 自动补全
-Plug 'SirVer/ultisnips'                                 " 代码片段
+" Plug 'SirVer/ultisnips'                                 " 代码片段
 Plug 'honza/vim-snippets'                               " 片段库
 Plug 'jiangmiao/auto-pairs'                             " 成对输入
 Plug 'ctrlpvim/ctrlp.vim'                               " 文件模糊搜索
@@ -205,6 +205,12 @@ autocmd InsertEnter,WinLeave * set nocursorline nohlsearch
 filetype off
 filetype plugin on
 filetype plugin indent on
+
+" TextEdit might fail if hidden is not set.
+set hidden
+
+" 使 vim 加载更快
+set updatetime=100
 
 " ==================================================
 " map
@@ -483,11 +489,11 @@ let g:go_fmt_command = "goimports"
 " UltiSnips
 " ==================================================
 
-" let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsExpandTrigger = "<nop>"
 " let g:UltiSnipsJumpForwardTrigger="<tab>"
 " let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 " 使用 UltiSnipsEdit 命令时垂直分割屏幕
- let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsEditSplit="vertical"
 
 " ==================================================
 " vim-markdown
@@ -502,16 +508,6 @@ let g:vim_markdown_no_extensions_in_markdown = 1
 
 au FileType markdown noremap <Leader>v :MarkdownPreview<CR>
 " autocmd BufWritePre *.markdown,*.md,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
-
-" ==================================================
-" vim-easy-align
-" ==================================================
-
-" Start interactive EasyAlign in visual mode (e.g. vipga)
-xnoremap ga <Plug>(EasyAlign)
-
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nnoremap ga <Plug>(EasyAlign)
 
 " ==================================================
 " vimwiki
@@ -536,6 +532,7 @@ let g:vimwiki_list = [{'path': '~/github.com/blog/',
 
 " 设置开关任务代办快捷键
 au FileType markdown nnoremap <Leader><CR> :VimwikiToggleListItem<CR>
+au FileType vimwiki  nnoremap <Leader><CR> :VimwikiToggleListItem<CR>
 
 " 关闭在插入表格时的 Tab 键映射
 let g:vimwiki_table_mappings = 0
@@ -549,13 +546,30 @@ let g:vimwiki_global_ext     = 0
 
 vnoremap <silent> <C-T> :<C-u>Ydv<CR>
 nnoremap <silent> <C-T> :<C-u>Ydc<CR>
-nnoremap <leader>yd :<C-u>Yde<CR>
+nnoremap <Leader>yd :<C-u>Yde<CR>
+
+" ==================================================
+" translation
+" ==================================================
+
+""" Configuration example
+" Echo translation in the cmdline
+nmap <silent> <Leader>tt <Plug>Translate
+vmap <silent> <Leader>tt <Plug>TranslateV
+" Display translation in a window
+nmap <silent> <Leader>tw <Plug>TranslateW
+vmap <silent> <Leader>tw <Plug>TranslateWV
+" Replace the text with translation
+nmap <silent> <Leader>tr <Plug>TranslateR
+vmap <silent> <Leader>tr <Plug>TranslateRV
+" Translate the text in clipboard
+nmap <silent> <Leader>tx <Plug>TranslateX
 
 " ==================================================
 " coc.nvim
 " ==================================================
 
-" TODO: https://www.bilibili.com/video/BV1Ka4y1E7AM
+source $HOME/.config/nvim/coc-config.vim
 
 " ==================================================
 " vim-gitgutter
@@ -630,6 +644,16 @@ let g:rainbow_conf = {
     \       'markdown': 0,
     \   }
     \}
+
+" ==================================================
+" vim-easy-align
+" ==================================================
+
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xnoremap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nnoremap ga <Plug>(EasyAlign)
 
 " ==================================================
 " vim-header
