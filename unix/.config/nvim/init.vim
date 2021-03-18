@@ -20,21 +20,29 @@ endif
 " vim-plug config
 
 call plug#begin('~/.config/nvim/plugged')
+
 Plug 'romainl/Apprentice'                               " 主题
 Plug 'morhetz/gruvbox'                                  " 主题
 Plug 'ajmwagar/vim-deus'                                " colorscheme
+Plug 'rakr/vim-one'                                     " colorscheme
 Plug 'vim-airline/vim-airline'                          " 状态栏
 Plug 'vim-airline/vim-airline-themes'                   " 状态栏主题
 Plug 'derekwyatt/vim-fswitch'                           " 接口与实现快速切换
-Plug 'scrooloose/nerdcommenter'                         " 快速开关注释插件
 Plug 'ryanoasis/vim-devicons'                           " 文件图标
 Plug 'hotoo/pangu.vim'                                  " pangu 中文排版规范化
 Plug 'vimwiki/vimwiki'                                  " vimwiki
 Plug 'junegunn/vim-easy-align'                          " 文本对齐
-Plug 'ianva/vim-youdao-translater'                      " 有道翻译
 Plug 'preservim/tagbar'                                 " 大纲查看
 Plug 'mhinz/vim-startify'                               " vim 开始屏幕
 Plug 'Lokaltog/vim-easymotion'                          " 快速移动
+Plug 'ianva/vim-youdao-translater'                      " 有道翻译
+Plug 'voldikss/vim-translator'                          " translate 
+Plug 'mbbill/undotree'                                  " 撤销历史记录查看
+Plug 'dstein64/vim-startuptime'                         " 查看 vim 启动时间
+Plug 'skywind3000/vim-terminal-help'                    " 使 vim 内置终端更加强大
+Plug 'voldikss/vim-floaterm'                            " 浮动终端
+Plug 'itchyny/vim-cursorword'                           " 显示单词光标
+Plug 'danilamihailov/beacon.nvim'                       " 跳转光标时闪光
 
 " nerdtree
 Plug 'scrooloose/nerdtree',{'on': 'NERDTreeToggle'}                     " 工程管理
@@ -60,6 +68,14 @@ Plug 'honza/vim-snippets'                               " 片段库
 Plug 'jiangmiao/auto-pairs'                             " 成对输入
 Plug 'ctrlpvim/ctrlp.vim'                               " 文件模糊搜索
 Plug 'Yggdroot/indentLine'                              " 缩进显示
+Plug 'tpope/vim-surround'                               " 更改成对标签
+Plug 'luochen1990/rainbow'                              " 彩虹括号 🌈
+Plug 'liuchengxu/vista.vim'                             " 查看、查找 LSP 符号和标签
+Plug 'alpertuna/vim-header'                             " 快速添加代码头注释和开源凭证
+Plug 'scrooloose/nerdcommenter'                         " 快速开关注释插件
+" 代码块高亮 (nvim-treesitter)
+" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+" Plug 'nvim-treesitter/nvim-treesitter-refactor'
 
 " TODO: 中英切换
 
@@ -142,6 +158,7 @@ set background=dark
 " colorscheme apprentice
 " colorscheme gruvbox
 colorscheme deus
+" colorscheme one
 
 " 启动 vim 时关闭折叠代码
 set nofoldenable
@@ -193,7 +210,7 @@ filetype plugin indent on
 " map
 " ==================================================
 
-" nnoremap 
+inoremap jk <Esc>
 
 " 定义快捷键到行首和行尾
 nnoremap H 0
@@ -247,8 +264,8 @@ noremap \s :%s//g<Left><Left>
 vnoremap \s :s//g<Left><Left>
 
 " buffer 切换快捷键
-nnoremap <C-h> :bp<CR>
-nnoremap <C-l> :bn<CR>
+nnoremap J :bp<CR>
+nnoremap K :bn<CR>
 
 " ==================================================
 " Leader
@@ -534,7 +551,6 @@ vnoremap <silent> <C-T> :<C-u>Ydv<CR>
 nnoremap <silent> <C-T> :<C-u>Ydc<CR>
 nnoremap <leader>yd :<C-u>Yde<CR>
 
-
 " ==================================================
 " coc.nvim
 " ==================================================
@@ -585,6 +601,58 @@ let g:tagbar_left = 1                                            " 让tagbar在�
 
 " 显示 markdown 源代码
 let g:indentLine_concealcursor = ''
+
+" ==================================================
+" rainbow
+" ==================================================
+
+let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
+let g:rainbow_conf = {
+    \   'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
+    \   'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
+    \   'operators': '_,_',
+    \   'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+    \   'separately': {
+    \       '*': {},
+    \       'tex': {
+    \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'],
+    \       },
+    \       'lisp': {
+    \           'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
+    \       },
+    \       'vim': {
+    \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
+    \       },
+    \       'html': {
+    \           'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
+    \       },
+    \       'css': 0,
+    \       'markdown': 0,
+    \   }
+    \}
+
+" ==================================================
+" vim-header
+" ==================================================
+
+let g:header_auto_add_header = 0
+let g:header_field_author = 'Leo'
+let g:header_field_author_email = 'alin.run@foxmail.com'
+nnoremap <F4> :AddHeader<CR>
+
+" ==================================================
+" nvim-treesitter
+" ==================================================
+
+" lua <<EOF
+" require'nvim-treesitter.configs'.setup {
+  " ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  " highlight = {
+      " enable = true,               -- false will disable the whole extension
+      " disable = { "c", "rust"  },  -- list of language that will be disabled
+  " },
+" }
+" EOF
 
 " ==================================================
 " 
