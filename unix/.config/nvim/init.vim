@@ -388,6 +388,19 @@ func! CompileRun()
     endif
 endfunc
 
+function AutoCommit()
+    " 进入到当前文件的绝对路径
+    cd %:p:h
+
+    " git 操作
+    :!git add %
+    :!git commit -m "auto commit"
+    :!git push
+endfunction
+
+" auto_commit
+autocmd BufWritePost ~/github.com/idea/idea.md call AutoCommit()
+
 " <Leader>r 运行
 noremap <Leader>r :call CompileRun()<CR>
 
